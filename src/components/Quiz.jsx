@@ -9,7 +9,6 @@ export default function Quiz() {
   const [userAnswers, setUserAnswer] = useState([]);
 
   const activeQuestionIndex = userAnswers.length;
-  // 모든 퀴즈 답변 완료 상황 (활성화된 질문 인덱스와 원본 질문 배열 길이가 일치)
   const quizIsComplete = activeQuestionIndex === QUESTIONS.length;
 
   // useCallback 사용
@@ -17,7 +16,7 @@ export default function Quiz() {
     selectedAnswer
   ) {
     setUserAnswer((prevAnswers) => {
-      return [...prevAnswers, selectedAnswer]; // 추가된 답변 배열을 setUserAnswer가 반환(상태 업데이트)하도록 return 명시
+      return [...prevAnswers, selectedAnswer]; // 추가된 답변 배열을 setUserAnswer이 인수로 사용할 수 있도록 return 명시
     });
   },
   []);
@@ -28,7 +27,7 @@ export default function Quiz() {
     [handleSelectAnswer]
   );
 
-  // [모든 퀴즈 답변 완료 시] 대체 내용 렌더링
+  // [모든 퀴즈 답변 완료 시]
   if (quizIsComplete) {
     return <Summary userAnswers={userAnswers} />;
   }
@@ -37,7 +36,7 @@ export default function Quiz() {
     <div id="quiz">
       <Question
         key={activeQuestionIndex}
-        index={activeQuestionIndex} // 우리들만의 속성
+        index={activeQuestionIndex}
         onSelectAnswer={handleSelectAnswer}
         onSkipAnswer={handleSkipAnswer}
       />
