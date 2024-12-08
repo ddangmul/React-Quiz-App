@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export default function QuestionTimer({ timeout, onTimeout }) {
+export default function QuestionTimer({ timeout, onTimeout, mode }) {
   const [remainingTime, setRemainingTime] = useState(timeout);
 
   // 다수의 setTime함수 생성되지 않도록 useEffect 사용
@@ -26,6 +26,11 @@ export default function QuestionTimer({ timeout, onTimeout }) {
   }, []); // 내부에서 사용 중인 상태 또는 속성이 없으므로 의존성 없음
 
   return (
-    <progress id="question-time" max={timeout} value={remainingTime}></progress>
+    <progress
+      id="question-time"
+      max={timeout}
+      value={remainingTime}
+      className={mode}
+    />
   );
 }

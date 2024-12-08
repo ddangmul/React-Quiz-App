@@ -10,6 +10,16 @@ export default function Question({ index, onSelectAnswer, onSkipAnswer }) {
     isCorrect: null,
   });
 
+  let timer = 10000;
+
+  if (answer.selectedAnswer) {
+    timer = 1000;
+  }
+
+  if (answer.isCorrect !== null) {
+    timer = 2000;
+  }
+
   function handleSelectAnswer(answer) {
     setAnswer({
       selectedAnswer: answer,
@@ -32,14 +42,16 @@ export default function Question({ index, onSelectAnswer, onSkipAnswer }) {
   if (answer.selectedAnswer && answer.isCorrect !== null) {
     answerState = answer.isCorrect ? "correct" : "wrong";
   } else if (answer.selectedAnswer) {
-    answerState = "selected";
+    answerState = "answered";
   }
 
   return (
     <div id="question">
       <QuestionTimer
-        timeout={10000} // 10초
-        onTimeout={onSkipAnswer} // 시간 초과 항목은 답변을 null로 설정
+        key={timer}
+        timeout={timer} // 10초
+        onTimeout={answer.selectedAnswer === "" ? onSkipAnswer : null}
+        mode={answerState}
       />
       <h2>{QUESTIONS[index].text}</h2>
       <Answers
