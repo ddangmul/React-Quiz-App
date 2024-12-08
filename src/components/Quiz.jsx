@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 
 import QUESTIONS from "../questions.js";
 import quizCompleteImg from "../assets/quiz-complete.png";
-import QuestionTimer from "./QuestionTimer.jsx";
+import Question from "./Question.jsx";
 
 export default function Quiz() {
   const [answerState, setAnswerState] = useState("");
@@ -55,51 +55,17 @@ export default function Quiz() {
     );
   }
 
-  // [답변 셔플]
-  // 위치 주의: quizIsComplete 상황이 아닐 경우(if문 퀴즈 답변 완료 시 렌더링 구문 이후)에 작성해야 로직 작동
-  const shuffledAnswers = [...QUESTIONS[activeQuestionIndex].answers];
-  shuffledAnswers.sort(() => Math.random() - 0.5); // sort() : 새 배열 반환하지 않고 원본 배열을 수정
-
   return (
     <div id="quiz">
-      <div id="question">
-        <QuestionTimer
-          // 키의 목적: 컴포넌트를 업데이트 (재생성)
-          // 질문이 변경될 때마다 QuestionTimer를 재생성하기 위해 key 설정
-          // 그래야 타이머가 매 질문마다 재작동함
-          key={activeQuestionIndex}
-          timeout={10000} // 10초
-          onTimeout={handleSkipAnswer} // 시간 초과 항목은 답변을 null로 설정
-        />
-        <h2>{QUESTIONS[activeQuestionIndex].text}</h2>
-        <ul id="answers">
-          {shuffledAnswers.map((answer) => {
-            const isSelected = userAnswers[userAnswers.length - 1] === answer;
-            let cssClass = "";
-
-            if (answerState === "answered" && isSelected) {
-              cssClass = "selected";
-            }
-
-            if (
-              (answerState === "correct" || answerState === "wrong") &&
-              isSelected
-            ) {
-              cssClass = answerState;
-            }
-            return (
-              <li key={answer} className="answer">
-                <button
-                  onClick={() => handleSelectAnswer(answer)}
-                  className={cssClass}
-                >
-                  {answer}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+      <Question
+        key={activeQuestionIndex}
+        question={QUESTIONS[activeQuestionIndex].text}
+        answers={QUESTIONS[activeQuestionIndex].answers}
+        onSelectAnswer={handleSelectAnswer}
+        answerState={answerState}
+        selectedAnswer={userAnswers[userAnswers.length - 1]}
+        onSkipAnswer={handleSkipAnswer}
+      />
     </div>
   );
 }
